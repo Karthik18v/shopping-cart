@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 const PRODUCTS = [
@@ -7,6 +7,13 @@ const PRODUCTS = [
   { id: 3, name: "Headphones", price: 100 },
   { id: 4, name: "Smartwatch", price: 150 },
 ];
+
+const freeItem = {
+  id: 99,
+  name: "Wireless Mouse",
+  price: 0,
+  quanity: 1,
+};
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -44,6 +51,15 @@ function App() {
   );
 
   const progressPercentage = Math.min((Subtotal / 1000) * 100, 100);
+
+  useEffect(() => {
+    const hasFreeItem = cart.some((item) => item.id === freeItem.id);
+    if (Subtotal >= 1000 && !hasFreeItem) {
+      setCart((prev) => [...prev, freeItem]);
+    } else if (Subtotal < 1000 && hasFreeItem) {
+      setCart((prev) => prev.filter((item) => item.id !== freeItem.id));
+    }
+  }, [Subtotal]);
 
   return (
     <div className="shopping-cart-container">
@@ -110,7 +126,7 @@ function App() {
                     {eachItem.price * eachItem.quanity}
                   </p>
                 </div>
-                {eachItem.price > 0 && (
+                {eachItem.price > 0 ? (
                   <div className="cart-items-button">
                     <button
                       style={{ background: "red", border: 0 }}
@@ -126,6 +142,8 @@ function App() {
                       +
                     </button>
                   </div>
+                ) : (
+                  <div className="free-item">Free Item</div>
                 )}
               </div>
             ))}

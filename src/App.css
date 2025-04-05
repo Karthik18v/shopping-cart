@@ -117,3 +117,9 @@ hr {
   margin-top: 10px;
   color: gray;
 }
+
+.free-item {
+  background-color: aquamarine;
+  padding: 5px;
+  border-radius: 5px;
+}
